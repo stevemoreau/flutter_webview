@@ -12,4 +12,5 @@ $ flutter create .
   <key>io.flutter.embedded_views_preview</key>
   <true/>
 ```
+- open ios/Runner.xcworkspace and set your provisioning profile
 - build and run project on a real iOS 13.x iPhone
