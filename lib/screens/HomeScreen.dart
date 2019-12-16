@@ -1,27 +1,14 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:moneyvox/utils/i18n/multiling_global_translations.dart';
-import 'package:moneyvox/values/colors.dart';
-import 'package:moneyvox/values/dimens.dart';
-import 'package:moneyvox/views/MyWebView.dart';
-import 'package:moneyvox/widgets/ColoredTabBar.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:webview/values/colors.dart';
+import 'package:webview/views/MyWebView.dart';
+import 'package:webview/widgets/ColoredTabBar.dart';
 
-
-const String URL_PREFIX = "http://app-mobile-webview.mobizel.com";
-
-const URLS_CATEGORY = {
-  'category_news': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-  'category_compare': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-  'category_bank': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-  'category_credit': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-  'category_placement': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-  'category_insurance': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-  'category_energy': URL_PREFIX + "/webview_flutter/long_html_with_scroll_position.html",
-};
+const String URL_PREFIX = "https://app-mobile-webview.mobizel.com";
+const int TABS_COUNT = 5;
+const URL_WITH_LONG_CONTENT = URL_PREFIX + "/webview_flutter/html_with_scroll_position.html";
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -50,9 +37,9 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    tabs = URLS_CATEGORY.entries
-        .map((url) => Tab(text: allTranslations.text(url.key).toUpperCase()))
-        .toList();
+    for (var i = 0; i < TABS_COUNT; i++) {
+      tabs.add(Tab(text: "Tab $i"));
+    }
 
     tabController = new TabController(vsync: this, length: tabs.length);
   }
@@ -72,32 +59,23 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
 
     print('Building webviews with height $height');
-
-    webviews = URLS_CATEGORY.entries
-        .map((url) => MyWebView(
-              url: url.value,
-              initialHeight: max(200, height),
-              preventNavigation: true,
-              onChangeTabIndex: (tabIndex) {
-                goToTab(tabIndex);
-              },
-            ))
-        .toList();
+    for (var i = 0; i < TABS_COUNT; i++) {
+      webviews.add(MyWebView(
+        url: URL_WITH_LONG_CONTENT,
+        initialHeight: height,
+        preventNavigation: true,
+        onChangeTabIndex: (tabIndex) {
+          goToTab(tabIndex);
+        },
+      ));
+    }
 
     appBar = AppBar(
       key: _appBarKey,
-      leading: IconButton(
-        icon:
-            SvgPicture.asset('assets/images/ic_menu.svg', color: MyColors.blue),
-        onPressed: () {
-        },
-      ),
-      title: SvgPicture.asset(
-        'assets/images/logo_moneyvox.svg',
-        width: home_logo_width,
-        height: home_logo_height,
-        fit: BoxFit.cover,
-      ),
+      title: Text("Webview scroll middle instead of top", style: TextStyle(
+        fontSize: 14,
+        color: Colors.black
+      )),
       centerTitle: false,
       brightness: Brightness.light,
       actions: <Widget>[],
@@ -120,7 +98,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     tabController.addListener(_handleTabSelection);
 
     return DefaultTabController(
-      length: 5,
+      length: webviews.length,
       child: Scaffold(
         drawerScrimColor: Colors.transparent,
         key: _scaffoldKey,

@@ -1,13 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:moneyvox/screens/HomeScreen.dart';
-import 'package:moneyvox/utils/i18n/bloc_provider_new.dart';
-import 'package:moneyvox/utils/i18n/multiling_bloc.dart';
-import 'package:moneyvox/utils/i18n/multiling_global_translations.dart';
+import 'package:webview/screens/HomeScreen.dart';
+import 'package:webview/utils/i18n/bloc_provider_new.dart';
+import 'package:webview/utils/i18n/multiling_bloc.dart';
+import 'package:webview/utils/i18n/multiling_global_translations.dart';
 
 Future main() async {
-  await allTranslations.init();
+  //await allTranslations.init();
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+  };
 
   runApp(MyApp());
 }
@@ -22,8 +26,7 @@ class _MyAppState extends State<MyApp> {
   TranslationsBloc translationsBloc;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  _MyAppState() {
-  }
+  _MyAppState();
 
   @override
   void initState() {
