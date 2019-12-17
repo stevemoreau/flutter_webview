@@ -22,13 +22,15 @@ class _WebViewExampleState extends State<WebViewExample> {
 
   @override
   Widget build(BuildContext context) {
+    print('Entering build()');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter WebView example'),
       ),
       body: Builder(builder: (BuildContext context) {
         return WebView(
-          initialUrl: 'https://www.moneyvox.fr/energie/',
+          initialUrl: 'https://app-mobile-webview.mobizel.com/webview_flutter/html_with_links.html',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
@@ -38,7 +40,8 @@ class _WebViewExampleState extends State<WebViewExample> {
             _toasterJavascriptChannel(context),
           ].toSet(),
           navigationDelegate: (NavigationRequest request) {
-
+            print('Entering navigationDelegate: requestUrl=${request.url} isForMainFrame=${request.isForMainFrame}');
+            return NavigationDecision.navigate;
           },
           onPageStarted: (String url) {
             print('Page started loading: $url');
